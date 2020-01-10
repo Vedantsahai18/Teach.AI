@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "/material-dashboard-react/static/css/main.6eb76ea9.chunk.css",
+    "main.js": "/material-dashboard-react/static/js/main.93ffc2d6.chunk.js",
+    "main.js.map": "/material-dashboard-react/static/js/main.93ffc2d6.chunk.js.map",
+    "runtime-main.js": "/material-dashboard-react/static/js/runtime-main.29fe7105.js",
+    "runtime-main.js.map": "/material-dashboard-react/static/js/runtime-main.29fe7105.js.map",
+    "static/css/2.d0176e96.chunk.css": "/material-dashboard-react/static/css/2.d0176e96.chunk.css",
+    "static/js/2.512f416f.chunk.js": "/material-dashboard-react/static/js/2.512f416f.chunk.js",
+    "static/js/2.512f416f.chunk.js.map": "/material-dashboard-react/static/js/2.512f416f.chunk.js.map",
+    "index.html": "/material-dashboard-react/index.html",
+    "precache-manifest.d7ae935d2129f00edc133097ce7278e7.js": "/material-dashboard-react/precache-manifest.d7ae935d2129f00edc133097ce7278e7.js",
+    "service-worker.js": "/material-dashboard-react/service-worker.js",
+    "static/css/2.d0176e96.chunk.css.map": "/material-dashboard-react/static/css/2.d0176e96.chunk.css.map",
+    "static/css/main.6eb76ea9.chunk.css.map": "/material-dashboard-react/static/css/main.6eb76ea9.chunk.css.map",
+    "static/js/2.512f416f.chunk.js.LICENSE": "/material-dashboard-react/static/js/2.512f416f.chunk.js.LICENSE",
+    "static/media/Gabriel_Sze_Compressed.jpg": "/material-dashboard-react/static/media/Gabriel_Sze_Compressed.1773df5a.jpg",
+    "static/media/Halftime1.png": "/material-dashboard-react/static/media/Halftime1.b5a4c1ef.png",
+    "static/media/TeachingPed.png": "/material-dashboard-react/static/media/TeachingPed.cafe668e.png",
+    "static/media/junjia.jpg": "/material-dashboard-react/static/media/junjia.952c454c.jpg",
+    "static/media/marc.jpg": "/material-dashboard-react/static/media/marc.8880a65c.jpg",
+    "static/media/reactlogo.png": "/material-dashboard-react/static/media/reactlogo.4c51de35.png",
+    "static/media/sidebar-1.jpg": "/material-dashboard-react/static/media/sidebar-1.8e9f0a3c.jpg",
+    "static/media/sidebar-2.jpg": "/material-dashboard-react/static/media/sidebar-2.310509c9.jpg",
+    "static/media/sidebar-3.jpg": "/material-dashboard-react/static/media/sidebar-3.25031690.jpg",
+    "static/media/sidebar-4.jpg": "/material-dashboard-react/static/media/sidebar-4.fc9cb053.jpg",
+    "static/media/students.png": "/material-dashboard-react/static/media/students.9ea3195f.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.29fe7105.js",
+    "static/css/2.d0176e96.chunk.css",
+    "static/js/2.512f416f.chunk.js",
+    "static/css/main.6eb76ea9.chunk.css",
+    "static/js/main.93ffc2d6.chunk.js"
+  ]
+}
