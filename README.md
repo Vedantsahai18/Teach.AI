@@ -1,5 +1,4 @@
 # Teach.AI
-Finalist at Singapore-India Hackathon (Top 5) with cash prize of $2,000 ; Project Idea given special mention by India PM Modi at awards ceremony
 
 Built a end-to-end architectural system that incorporates human pose estimator, emotion recognition and head gaze deep learning model into a customised neural network
 
