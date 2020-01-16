@@ -71,9 +71,11 @@ function HeadGazeSetup(source) {
 }
 
 
-function HeadGazeDetector(p_poses, timestamp, THRESHOLD = 0.3) {
+function HeadGazeDetector(p_poses, timestamp, THRESHOLD = 0.1) {
   const OUTPUT = []
   let angle = 50;
+
+  console.log(" Thres ", THRESHOLD, "Raw Poses", p_poses);
 
   poses = p_poses.filter(function (pose) {
     return (pose.score > THRESHOLD);
@@ -83,7 +85,7 @@ function HeadGazeDetector(p_poses, timestamp, THRESHOLD = 0.3) {
   for (let i = 0; i < poseLength; i++) {
     let detectedEye = true;
     const person = poses[i];
-    console.log(person)
+    console.log("Pose Score for Person", i, person)
 
     if (
       !person.keypoints.find(kpt => kpt.part === "nose") ||
