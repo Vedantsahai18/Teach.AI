@@ -7,7 +7,6 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 
 async function Setup() {
   console.log("Setup Started")
-  console.log("Video Player 2Loaded")
 
   video.srcObject = await navigator.mediaDevices.getUserMedia(
     { video: true, audio: false },
@@ -28,7 +27,7 @@ async function Setup() {
 
       const faceout = await DetectAllFaces(video, timestamp);
       console.log("faceout", faceout);
-      const poses = HumanPoseEstimate(poseNet, timestamp);
+      const poses = HumanPoseEstimate(timestamp);
       console.log("poses", poses);
 
       // Head Gaze Requires Current Raw Pose
