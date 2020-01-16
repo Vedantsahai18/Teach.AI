@@ -19,6 +19,7 @@ function HumanPoseEstimationSetup(video) {
     const poseNet = ml5.poseNet(video, () => {
       poseNet.on('pose', (results) => {
         poses = results;
+        console.log("Poses Read");
       }
       );
       resolve(poseNet)
