@@ -8,10 +8,10 @@ function FaceDetectionSetup() {
 }
 
 function DetectAllFaceDescriptionWithLandmarksAndDescription(img) {
-  return faceapi.detectAllFaces(input, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
+  return faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
 }
 function DetectSingleFaceDescriptionWithLandmarksAndDescription(img) {
-  return faceapi.detectSingleFace(input, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
+  return faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
 }
 
 async function DetectAllFaces(input, timestamp) {
