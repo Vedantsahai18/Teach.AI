@@ -3,3 +3,8 @@ function GetWebCam() {
         { video: true, audio: false },
     )
 }
+
+function TimeStamp(){
+    return Math.round(new Date().getTime()/1000);
+  }
+  
