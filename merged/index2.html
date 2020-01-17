@@ -10,51 +10,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>Dashboard for Emotion Detection</title>
     <title>Document</title>
+    <script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
+    
     <script defer type="text/javascript" src="face-api.min.js"></script>
     <script defer type="text/javascript" src="opencv.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-    <script defer src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js" type="text/javascript"></script>
 
     <script defer type="text/javascript" src="humanPoseEstimation.js"></script>
     <script defer type="text/javascript" src="faceDetectionEmotion.js"></script>
     <script defer type="text/javascript" src="headGaze.js"></script>
     <script defer type="text/javascript" src="utils.js"></script>
     <script defer type="text/javascript" src="script.js"></script>
-    <style>
-        canvas {
-            position: absolute;
-            top: 8vw;
-            left: 45vh;
-            z-index: 1;
-            overflow: clip;
-            /*  Disable scrollbars */
-        }
-
-        a {
-            color: white;
-        }
-
-        .content,
-        .section {
-            background-color: black;
-        }
-
-        #navigation {
-            background-color: white;
-        }
-
-        #abc {
-            background-color: white;
-        }
-
-        #pqr {
-            background-color: black;
-        }
-    </style>
 </head>
 
 <body>
     <video id="video" width="720" height="560" position="relative" autoplay muted></video>
 </body>
+
 </html>

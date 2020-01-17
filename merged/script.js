@@ -9,15 +9,14 @@ async function Setup() {
   console.log("Setup Started")
 
   const webCam = document.getElementById('video')
-  webCam.srcObject = await GetWebCam()
   console.log("Video Player Loaded")
 
-  PoseNet = await HumanPoseEstimationSetup(webCam)
+  const PoseNet = await HumanPoseEstimationSetup(webCam)
   console.log("Human Pose Estimation Setup Completed")
   await FaceDetectionSetup()
   console.log("Face Detection Setup completed")
-  console.log("Head Gaze Setup completed")
 
+  webCam.srcObject = await GetWebCam()
   setInterval(async () => {
     console.log("Is Video Playing?", webCam.playing);
     if (webCam.playing) {
