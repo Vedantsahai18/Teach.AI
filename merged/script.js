@@ -5,12 +5,20 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
   }
 })
 
+// Change to Link from Database
+const FACE_URI = "/face-img";
+
 async function Setup() {
   console.log("Setup Started")
 
   const webCam = document.getElementById('video')
   webCam.srcObject = await GetWebCam()
   console.log("Video Player Loaded")
+
+  // Gets the Current Face of the User
+  const currentFace = await (await fetch(FACE_URI)).text()
+  // Convert Face to Face Matcher
+  const curentFaceMatcher = await FaceRecognitionGetMatcherFromImage(currentFace)
 
   const PoseNet = await HumanPoseEstimationSetup(webCam)
   console.log("Human Pose Estimation Setup Completed")
@@ -23,15 +31,18 @@ async function Setup() {
     console.log("Is Video Playing?", webCam.playing);
     if (webCam.playing) {
       const timestamp = TimeStamp();
-      const faceout = await DetectAllFaces(webCam, timestamp);
-      console.log("faceout", faceout);
-      if(faceout.length === 0)
+      const faceouts = await DetectAllFaces(webCam, timestamp);
+      console.log("faceouts", faceouts);
+      if (faceouts.length === 0)
         return;
+
+      FaceRecognition(webCam, currentFaceMatcher)
+
       const poses = await HumanPoseEstimate(PoseNet, webCam, timestamp);
       console.log("poses", poses);
-      if(poses.length === 0)
+      if (poses.length === 0)
         return;
-      const prediction = await TFModelPredict(TFModel, faceout[0], pose[0])
+      const prediction = await TFModelPredict(TFModel, faceouts[0], pose[0])
       console.log(prediction)
     }
   }, 3000)

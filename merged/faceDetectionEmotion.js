@@ -36,11 +36,11 @@ async function DetectAllFaces(input, timestamp) {
   return OUTPUT
 }
 
-async function FaceRecognitionWithImage(userFace, max_face_distance_euclidean = 0.6) {
+async function FaceRecognitionGetMatcherFromImage(userFace, max_face_distance_euclidean = 0.6) {
   const userFaceDescription = await DetectSingleFaceDescriptionWithLandmarksAndDescription(userFace)
   return FaceRecognitionWithDescription(userFaceDescription, max_face_distance_euclidean);
 }
-function FaceRecognitionWithDescription(userFaceDescription, max_face_distance_euclidean = 0.6) {
+function FaceRecognitionGetMatcherFromDescription(userFaceDescription, max_face_distance_euclidean = 0.6) {
   const userFaceMatcher = new faceapi.FaceMatcher(userFaceDescription, max_face_distance_euclidean);
   return userFaceMatcher;
 }
