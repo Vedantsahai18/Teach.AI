@@ -56,6 +56,8 @@
     let base64 = canvas.toDataURL('image/png');
     photo.setAttribute('src', base64);
 
+    console.log(base64);
+
     // Write Code to Publish to Browser Here
   }
 
