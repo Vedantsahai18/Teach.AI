@@ -6,8 +6,8 @@ let isSleeping = [];
 let lastRaiseHand = [];
 let isRaiseHand = []
 
-function HumanPoseEstimate(timestamp) {
-  return gotPoses(HumanPoseEstimatorRawPose(), timestamp);
+function HumanPoseEstimate(timestamp, THRESHOLD=0.3) {
+  return gotPoses(HumanPoseEstimatorRawPose(), THRESHOLD, timestamp);
 }
 
 function HumanPoseEstimatorRawPose(){
@@ -16,6 +16,7 @@ function HumanPoseEstimatorRawPose(){
 
 function HumanPoseEstimationSetup(video) {
   return new Promise((resolve, reject) => {
+    HeadGazeSetup(video);
     const poseNet = ml5.poseNet(video, () => {
       poseNet.on('pose', (results) => {
         poses = results;
@@ -27,7 +28,7 @@ function HumanPoseEstimationSetup(video) {
   })
 }
 
-function gotPoses(poses, timestamp) {
+function gotPoses(poses, THRESHOLD, timestamp) {
 
   let OUTPUT = []
   if (poses == null)
@@ -37,6 +38,7 @@ function gotPoses(poses, timestamp) {
     if (poses[i]["pose"]["score"] >= 0.15) {
       keypoints = poses[i]["pose"]["keypoints"]
       const item = {
+        headPose:  HeadGazeDetect(poses[i], THRESHOLD),
         sleeping: checkSleeping(keypoints, i),
         raisHand: checkRaiseHand(keypoints, i),
         eyeCoordX: keypoints[1].position.x,

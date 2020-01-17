@@ -8,6 +8,7 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 async function Setup() {
   console.log("Setup Started")
 
+  console.log(video)
   video.srcObject = await navigator.mediaDevices.getUserMedia(
     { video: true, audio: false },
   )
@@ -17,7 +18,6 @@ async function Setup() {
   console.log("Human Pose Estimation Setup Completed")
   await FaceDetectionSetup()
   console.log("Face Detection Setup completed")
-  HeadGazeSetup(video)
   console.log("Head Gaze Setup completed")
 
   setInterval(async () => {
@@ -29,11 +29,6 @@ async function Setup() {
       console.log("faceout", faceout);
       const poses = HumanPoseEstimate(timestamp);
       console.log("poses", poses);
-
-      // Head Gaze Requires Current Raw Pose
-      const raw_poses = HumanPoseEstimatorRawPose();
-      const head_gaze = HeadGazeDetector(raw_poses, timestamp)
-      console.log("head_gaze", head_gaze);
     }
   }, 3000)
 

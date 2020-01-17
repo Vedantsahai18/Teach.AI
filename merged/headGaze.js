@@ -70,166 +70,130 @@ function HeadGazeSetup(source) {
   };
 }
 
-
-function HeadGazeDetector(p_poses, timestamp, THRESHOLD = 0.1) {
-  const OUTPUT = []
-  let angle = 50;
-
-  console.log(" Thres ", THRESHOLD, "Raw Poses", p_poses);
-
-  poses = p_poses.filter(function (pose) {
-    return (pose.score > THRESHOLD);
-  });
-  // console.log(poses.length + " is the POSE LENGTH")
-  let poseLength = poses.length
-  for (let i = 0; i < poseLength; i++) {
-    let detectedEye = true;
-    const person = poses[i];
-    console.log("Pose Score for Person", i, person)
-
-    if (
-      !person.keypoints.find(kpt => kpt.part === "nose") ||
-      !person.keypoints.find(kpt => kpt.part === "leftEye") ||
-      !person.keypoints.find(kpt => kpt.part === "rightEye")
-    ) {
-      detectedEye = false;
-    }
-    if (detectedEye == true) {
-      const ns = person.keypoints.filter(kpt => kpt.part === "nose")[0]
-        .position;
-      const le = person.keypoints.filter(kpt => kpt.part === "leftEye")[0]
-        .position;
-      const re = person.keypoints.filter(kpt => kpt.part === "rightEye")[0]
-        .position;
-
-      // 2D image points. If you change the image, you need to change vector
-      [
-        ns.x,
-        ns.y, // Nose tip
-        ns.x,
-        ns.y, // Nose tip (see HACK! above)
-        // 399, 561, // Chin
-        le.x,
-        le.y, // Left eye left corner
-        re.x,
-        re.y // Right eye right corner
-        // 345, 465, // Left Mouth corner
-        // 453, 469 // Right mouth corner
-      ].map((v, i) => {
-        imagePoints.data64F[i] = v;
-      });
-
-      // Hack! initialize transition and rotation matrixes to improve estimation
-      tvec.data64F[0] = -100;
-      tvec.data64F[1] = 100;
-      tvec.data64F[2] = 1000;
-      const distToLeftEyeX = Math.abs(le.x - ns.x);
-      const distToRightEyeX = Math.abs(re.x - ns.x);
-      if (distToLeftEyeX < distToRightEyeX) {
-        // looking at left
-        rvec.data64F[0] = -1.0;
-        rvec.data64F[1] = -0.75;
-        rvec.data64F[2] = -3.0;
-      } else {
-        // looking at right
-        rvec.data64F[0] = 1.0;
-        rvec.data64F[1] = -0.75;
-        rvec.data64F[2] = -3.0;
-      }
-
-      const success = cv.solvePnP(
-        modelPoints,
-        imagePoints,
-        cameraMatrix,
-        distCoeffs,
-        rvec,
-        tvec,
-        true
-      );
-      if (!success) {
-        return OUTPUT;
-      }
-
-      cv.projectPoints(
-        pointZ,
-        rvec,
-        tvec,
-        cameraMatrix,
-        distCoeffs,
-        noseEndPoint2DZ,
-        jaco
-      );
-      cv.projectPoints(
-        pointY,
-        rvec,
-        tvec,
-        cameraMatrix,
-        distCoeffs,
-        nose_end_point2DY,
-        jaco
-      );
-      cv.projectPoints(
-        pointX,
-        rvec,
-        tvec,
-        cameraMatrix,
-        distCoeffs,
-        nose_end_point2DX,
-        jaco
-      );
-
-
-
-      // draw axis
-      const pNose = {
-        x: imagePoints.data64F[0],
-        y: imagePoints.data64F[1]
-      };
-      const pZ = {
-        x: noseEndPoint2DZ.data64F[0],
-        y: noseEndPoint2DZ.data64F[1]
-      };
-      const p3 = {
-        x: nose_end_point2DY.data64F[0],
-        y: nose_end_point2DY.data64F[1]
-      };
-      const p4 = {
-        x: nose_end_point2DX.data64F[0],
-        y: nose_end_point2DX.data64F[1]
-      };
-
-      const angleWidth = Math.abs(pZ.x - pNose.x);
-      const angleHeight = Math.abs(pZ.y - pNose.y);
-      const angleTangent = angleHeight / angleWidth;
-      angle = (Math.atan(angleTangent) * 180) / Math.PI;
-
-    }
-
-    // CONSOLE STATEMENTS TO OUTPUT
-    if (!detectedEye) {
-      // console.log("2 Eye not in frame");
-      result = 0
-    } else if (angle < 16) {
-      // console.log("1 Facing Away");
-      result = 1
-    } else {
-      // console.log("0 All good");
-      result = 2
-    }
-
-
-    if (detectedEye) {
-      OUTPUT.push({
-        headpose: result,
-        xCord: person.keypoints.find(kpt => kpt.part === "leftEye").position.x,
-        yCord: person.keypoints.find(kpt => kpt.part === "rightEye").position.y,
-        timestamp: timestamp,
-        numPersons: poseLength,
-        personId: i,
-      })
-      // console.log(OUTPUT)
-    }
+function HeadGazeDetect(person,THRESHOLD) {
+  // Check NS, LE, RE
+  person = person.pose
+  for (let i = 0; i < 3; ++i) {
+    if (person.keypoints[i].score < THRESHOLD)
+      return 0;
   }
-  return OUTPUT
+
+  const ns = person.keypoints[0].position;
+  const le = person.keypoints[1].position;
+  const re = person.keypoints[2].position;
+
+  // 2D image points. If you change the image, you need to change vector
+  [
+    ns.x,
+    ns.y, // Nose tip
+    ns.x,
+    ns.y, // Nose tip (see HACK! above)
+    // 399, 561, // Chin
+    le.x,
+    le.y, // Left eye left corner
+    re.x,
+    re.y // Right eye right corner
+    // 345, 465, // Left Mouth corner
+    // 453, 469 // Right mouth corner
+  ].map((v, i) => {
+    imagePoints.data64F[i] = v;
+  });
+
+  // Hack! initialize transition and rotation matrixes to improve estimation
+  tvec.data64F[0] = -100;
+  tvec.data64F[1] = 100;
+  tvec.data64F[2] = 1000;
+  const distToLeftEyeX = Math.abs(le.x - ns.x);
+  const distToRightEyeX = Math.abs(re.x - ns.x);
+  if (distToLeftEyeX < distToRightEyeX) {
+    // looking at left
+    rvec.data64F[0] = -1.0;
+    rvec.data64F[1] = -0.75;
+    rvec.data64F[2] = -3.0;
+  } else {
+    // looking at right
+    rvec.data64F[0] = 1.0;
+    rvec.data64F[1] = -0.75;
+    rvec.data64F[2] = -3.0;
+  }
+
+  const success = cv.solvePnP(
+    modelPoints,
+    imagePoints,
+    cameraMatrix,
+    distCoeffs,
+    rvec,
+    tvec,
+    true
+  );
+  if (!success) {
+    return 0;
+  }
+
+  cv.projectPoints(
+    pointZ,
+    rvec,
+    tvec,
+    cameraMatrix,
+    distCoeffs,
+    noseEndPoint2DZ,
+    jaco
+  );
+  cv.projectPoints(
+    pointY,
+    rvec,
+    tvec,
+    cameraMatrix,
+    distCoeffs,
+    nose_end_point2DY,
+    jaco
+  );
+  cv.projectPoints(
+    pointX,
+    rvec,
+    tvec,
+    cameraMatrix,
+    distCoeffs,
+    nose_end_point2DX,
+    jaco
+  );
+
+
+
+  // draw axis
+  const pNose = {
+    x: imagePoints.data64F[0],
+    y: imagePoints.data64F[1]
+  };
+  const pZ = {
+    x: noseEndPoint2DZ.data64F[0],
+    y: noseEndPoint2DZ.data64F[1]
+  };
+  const p3 = {
+    x: nose_end_point2DY.data64F[0],
+    y: nose_end_point2DY.data64F[1]
+  };
+  const p4 = {
+    x: nose_end_point2DX.data64F[0],
+    y: nose_end_point2DX.data64F[1]
+  };
+
+  const angleWidth = Math.abs(pZ.x - pNose.x);
+  const angleHeight = Math.abs(pZ.y - pNose.y);
+  const angleTangent = angleHeight / angleWidth;
+  const angle = (Math.atan(angleTangent) * 180) / Math.PI;
+
+  if (angle < 16) {
+    // console.log("1 Facing Away");
+    result = 1
+  } else {
+    // console.log("0 All good");
+    result = 2
+  }
+
+
+  return result;
+  // console.log(OUTPUT)
+
 }
 
