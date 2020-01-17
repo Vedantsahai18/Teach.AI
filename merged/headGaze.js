@@ -72,7 +72,6 @@ function HeadGazeSetup(source) {
 
 function HeadGazeDetect(person,THRESHOLD) {
   // Check NS, LE, RE
-  person = person.pose
   for (let i = 0; i < 3; ++i) {
     if (person.keypoints[i].score < THRESHOLD)
       return 0;

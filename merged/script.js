@@ -1,4 +1,6 @@
 const video = document.getElementById('video')
+let PoseNet = null;
+
 Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
   get: function () {
     return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
@@ -14,7 +16,7 @@ async function Setup() {
   )
   console.log("Video Player Loaded")
 
-  await HumanPoseEstimationSetup(video)
+  PoseNet = await HumanPoseEstimationSetup(video)
   console.log("Human Pose Estimation Setup Completed")
   await FaceDetectionSetup()
   console.log("Face Detection Setup completed")
@@ -27,7 +29,7 @@ async function Setup() {
 
       const faceout = await DetectAllFaces(video, timestamp);
       console.log("faceout", faceout);
-      const poses = HumanPoseEstimate(timestamp);
+      const poses = await HumanPoseEstimate(PoseNet, video, timestamp);
       console.log("poses", poses);
     }
   }, 3000)

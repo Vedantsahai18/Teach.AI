@@ -1,4 +1,3 @@
-let poses = null;
 let skeletons = [];
 
 let lastSleepTime = [];
@@ -6,26 +5,25 @@ let isSleeping = [];
 let lastRaiseHand = [];
 let isRaiseHand = []
 
-function HumanPoseEstimate(timestamp, THRESHOLD=0.3) {
-  return gotPoses(HumanPoseEstimatorRawPose(), THRESHOLD, timestamp);
+async function HumanPoseEstimate(net, input, timestamp, THRESHOLD=0.3) {
+  const raw_poses = await net.estimateMultiplePoses(input, {
+    flipHorizontal: false,
+    maxDetections: 5,
+    scoreThreshold: THRESHOLD,
+    nmsRadius: 20
+  });
+  return gotPoses(raw_poses, THRESHOLD, timestamp);
 }
 
-function HumanPoseEstimatorRawPose(){
-  return poses;
-}
-
-function HumanPoseEstimationSetup(video) {
-  return new Promise((resolve, reject) => {
+async function HumanPoseEstimationSetup(video) {
     HeadGazeSetup(video);
-    const poseNet = ml5.poseNet(video, () => {
-      poseNet.on('pose', (results) => {
-        poses = results;
-        console.log("Poses Read");
-      }
-      );
-      resolve(poseNet)
+    const net = await posenet.load({
+      architecture: 'MobileNetV1',
+      outputStride: 16,
+      inputResolution: { width: video.width, height: video.height },
+      multiplier: 0.75
     });
-  })
+    return net;
 }
 
 function gotPoses(poses, THRESHOLD, timestamp) {
@@ -35,12 +33,12 @@ function gotPoses(poses, THRESHOLD, timestamp) {
     return OUTPUT;
 
   for (i = 0; i < poses.length; i++) {
-    if (poses[i]["pose"]["score"] >= 0.15) {
-      keypoints = poses[i]["pose"]["keypoints"]
+    if (poses[i]["score"] >= THRESHOLD) {
+      keypoints = poses[i]["keypoints"]
       const item = {
         headPose:  HeadGazeDetect(poses[i], THRESHOLD),
-        sleeping: checkSleeping(keypoints, i),
-        raisHand: checkRaiseHand(keypoints, i),
+        sleeping: checkSleeping(keypoints, timestamp, i),
+        raisHand: checkRaiseHand(keypoints, timestamp, i),
         eyeCoordX: keypoints[1].position.x,
         eyeCoordY: keypoints[1].position.y,
         timestamp: timestamp
@@ -51,19 +49,19 @@ function gotPoses(poses, THRESHOLD, timestamp) {
   return OUTPUT;
 }
 
-function checkSleeping(keypoints, i) {
+function checkSleeping(keypoints, timestamp, i) {
   const tanAngle = Math.abs(keypoints[1].position.y - keypoints[2].position.y) / Math.abs(keypoints[1].position.x - keypoints[2].position.x)
   const angle = Math.atan(tanAngle) * 180 / Math.PI
   if (angle > 35 || (keypoints[1].position.y > keypoints[3].position.y && keypoints[2].position.y > keypoints[4].position.y)) {
     if (isSleeping[i] == false) {
       isSleeping[i] = true
-      lastSleepTime[i] = getTime()
+      lastSleepTime[i] = timestamp
     }
   } else {
     isSleeping[i] = false;
   }
 
-  if (getTime() - lastSleepTime[i] >= 2 && isSleeping[i]) {
+  if (timestamp - lastSleepTime[i] >= 2 && isSleeping[i]) {
     // console.log("SLEEPING ----------------------------------")
     return 1;
   } else {
@@ -71,20 +69,15 @@ function checkSleeping(keypoints, i) {
   }
 }
 
-function checkRaiseHand(keypoints, i) {
+function checkRaiseHand(keypoints, timestamp, i) {
   if (keypoints[7].position.y < keypoints[5].position.y || keypoints[8].position.y < keypoints[6].position.y) {
     if (isRaiseHand[i] == false) {
       isRaiseHand[i] = true
-      lastRaiseHand[i] = getTime()
+      lastRaiseHand[i] = timestamp
     }
   } else {
     isRaiseHand[i] = false;
   }
 
-  return (getTime() - lastRaiseHand[i] >= 2 && isRaiseHand[i]) * 1
-}
-
-function getTime() {
-  let today = new Date();
-  return today.getMinutes() * 60 + today.getSeconds()
+  return (timestamp - lastRaiseHand[i] >= 2 && isRaiseHand[i]) * 1
 }
