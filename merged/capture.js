@@ -58,7 +58,7 @@
 
     console.log(base64);
 
-    // Write Code to Publish to Browser Here
+    // Write Code to Publish to Backend
   }
 
   // Set up our event listener to run the startup process

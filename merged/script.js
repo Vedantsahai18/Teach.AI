@@ -18,7 +18,7 @@ async function Setup() {
   console.log("Face Detection Setup completed")
   console.log("Head Gaze Setup completed")
 
-  Worker worker = new Worker(async () => {
+  setInterval(async () => {
     console.log("Is Video Playing?", webCam.playing);
     if (webCam.playing) {
       const currentTime = new Date();
@@ -29,7 +29,7 @@ async function Setup() {
       const poses = await HumanPoseEstimate(PoseNet, webCam, timestamp);
       console.log("poses", poses);
     }
-  });
+  }, 3000)
 
 }
 Setup().then(() => console.log("Script Setup Models Loaded"))
