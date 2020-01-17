@@ -32,7 +32,7 @@ function gotPoses(poses, THRESHOLD, timestamp) {
   if (poses == null)
     return OUTPUT;
 
-  for (i = 0; i < poses.length; i++) {
+  for (let i = 0; i < poses.length; i++) {
     if (poses[i]["score"] >= THRESHOLD) {
       keypoints = poses[i]["keypoints"]
       const item = {
@@ -61,12 +61,7 @@ function checkSleeping(keypoints, timestamp, i) {
     isSleeping[i] = false;
   }
 
-  if (timestamp - lastSleepTime[i] >= 2 && isSleeping[i]) {
-    // console.log("SLEEPING ----------------------------------")
-    return 1;
-  } else {
-    return 0;
-  }
+  return (timestamp - lastSleepTime[i] >= 2 && isSleeping[i]) * 1
 }
 
 function checkRaiseHand(keypoints, timestamp, i) {

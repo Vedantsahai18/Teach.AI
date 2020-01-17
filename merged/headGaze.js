@@ -168,14 +168,6 @@ function HeadGazeDetect(person,THRESHOLD) {
     x: noseEndPoint2DZ.data64F[0],
     y: noseEndPoint2DZ.data64F[1]
   };
-  const p3 = {
-    x: nose_end_point2DY.data64F[0],
-    y: nose_end_point2DY.data64F[1]
-  };
-  const p4 = {
-    x: nose_end_point2DX.data64F[0],
-    y: nose_end_point2DX.data64F[1]
-  };
 
   const angleWidth = Math.abs(pZ.x - pNose.x);
   const angleHeight = Math.abs(pZ.y - pNose.y);
@@ -184,15 +176,12 @@ function HeadGazeDetect(person,THRESHOLD) {
 
   if (angle < 16) {
     // console.log("1 Facing Away");
-    result = 1
+    return 1
   } else {
     // console.log("0 All good");
-    result = 2
+    return 2
   }
 
-
-  return result;
-  // console.log(OUTPUT)
-
+  return 0;
 }
 
