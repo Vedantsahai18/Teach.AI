@@ -94,7 +94,7 @@
     //   contentType: "application/json"
     // });
 
-    fetch("/api/savePerson",
+    await fetch("/api/savePerson",
     {
       headers: {
         'Accept': 'application/json',

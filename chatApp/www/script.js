@@ -8,7 +8,7 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 // Change to Link from Database
 const FACE_URI = "/api/face-img";
 const MODEL_HTTP_URL = '/models/model.json'
-const MODEL_INDEXEDDB_URL = 'indexeddb://attention-model';
+const MODEL_INDEXEDDB_URL = 'indexeddb://attention-model2';
 
 async function Setup() {
   console.log("Setup Started")

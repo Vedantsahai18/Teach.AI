@@ -86,13 +86,24 @@
       image: base64
     }
 
-    $.ajax({
-      url: "/api/sendImage",
+    // $.ajax({
+    //   url: "/api/savePerson",
+    //   method: "POST",
+    //   data: JSON.stringify(image_data),
+    //   datatype: "json",
+    //   contentType: "application/json"
+    // });
+
+    await fetch("/api/savePerson",
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
       method: "POST",
-      data: JSON.stringify(image_data),
-      datatype: "json",
-      contentType: "application/json"
+      body: JSON.stringify(image_data)
     });
+
   }
 
   // Set up our event listener to run the startup process
