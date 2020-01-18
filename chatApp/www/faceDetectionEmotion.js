@@ -15,26 +15,26 @@ function DetectSingleFaceDescriptionWithLandmarksAndDescription(img) {
 }
 
 async function DetectAllFaces(input, timestamp) {
-  const detections = await DetectAllFaceDescriptionWithLandmarksAndDescription(input);
-  let OUTPUT = []
-  let numPersons = detections.length
+  const raw_faceouts = await DetectAllFaceDescriptionWithLandmarksAndDescription(input);
+  let faceouts = []
+  let numPersons = raw_faceouts.length
   for (let i = 0; i < numPersons; i++) {
-    if (!isNaN(detections[i].alignedRect._box.x)) {
+    if (!isNaN(raw_faceouts[i].alignedRect._box.x)) {
       const item = {
         // ...detections[i].alignedRect._box,
-        ...detections[i].alignedRect._box,
-        ...detections[i].expressions,
+        ...raw_faceouts[i].alignedRect._box,
+        ...raw_faceouts[i].expressions,
         timestamp: timestamp,
         numPerson: numPersons,
         personId: i,
-        headPose: HeadGazeDetect(detections[i])
+        headPose: HeadGazeDetect(raw_faceouts[i])
       }
-      OUTPUT.push(item)
+      faceouts.push(item)
     }
 
   }
 
-  return OUTPUT
+  return [faceouts, raw_faceouts]
 }
 
 async function FaceRecognitionGetMatcherFromImage(userFace, max_face_distance_euclidean = 0.6) {

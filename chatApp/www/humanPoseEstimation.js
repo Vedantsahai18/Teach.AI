@@ -5,7 +5,7 @@ let isSleeping = [];
 let lastRaiseHand = [];
 let isRaiseHand = []
 
-async function HumanPoseEstimate(net, input, timestamp, POSE_THRESHOLD=0.3, THRESHOLD = 0.3) {
+async function HumanPoseEstimate(net, input, timestamp, POSE_THRESHOLD = 0.3, THRESHOLD = 0.3) {
   const raw_poses = await net.estimateMultiplePoses(input, {
     flipHorizontal: false,
     maxDetections: 5,
@@ -26,26 +26,29 @@ async function HumanPoseEstimationSetup(video) {
   return net;
 }
 
-function gotPoses(poses, POSE_THRESHOLD, THRESHOLD, timestamp) {
+function GetFaceKeyPoints(pose) {
+  pose = pose.keypoints;
+  return [pose[0].position, pose[1].position, pose[2].position, pose[3].position, pose[4].position];
+}
 
-  let OUTPUT = []
-  if (poses == null)
-    return OUTPUT;
+function gotPoses(raw_poses, POSE_THRESHOLD, THRESHOLD, timestamp) {
 
-  for (let i = 0; i < poses.length; i++) {
-    if (poses[i]["score"] >= POSE_THRESHOLD) {
-      keypoints = poses[i]["keypoints"]
-      const item = {
-        sleeping: checkSleeping(keypoints, timestamp, i),
-        raisHand: checkRaiseHand(keypoints, timestamp, i),
-        eyeCoordX: keypoints[1].position.x,
-        eyeCoordY: keypoints[1].position.y,
-        timestamp: timestamp
-      };
-      OUTPUT.push(item)
-    }
+  let poses = []
+  if (raw_poses == null)
+    return poses;
+
+  for (let i = 0; i < raw_poses.length; i++) {
+    keypoints = raw_poses[i]["keypoints"]
+    const item = {
+      sleeping: checkSleeping(keypoints, timestamp, i),
+      raisHand: checkRaiseHand(keypoints, timestamp, i),
+      eyeCoordX: keypoints[1].position.x,
+      eyeCoordY: keypoints[1].position.y,
+      timestamp: timestamp
+    };
+    poses.push(item)
   }
-  return OUTPUT;
+  return [poses, raw_poses];
 }
 
 function checkSleeping(keypoints, timestamp, i) {

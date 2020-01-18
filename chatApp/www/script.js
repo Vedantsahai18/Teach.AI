@@ -33,18 +33,21 @@ async function Setup() {
     if (webCam.playing) {
       console.log("Is Video Playing?", webCam.playing);
       const timestamp = TimeStamp();
-      const faceouts = await DetectAllFaces(webCam, timestamp);
+      const [faceouts, raw_faceouts] = await DetectAllFaces(webCam, timestamp);
       console.log("faceouts", faceouts);
       // if (faceouts.length === 0)
       //   return;
 
       // FaceRecognition(webCam, currentFaceMatcher)
 
-      const poses = await HumanPoseEstimate(PoseNet, webCam, timestamp);
+      const [poses, raw_poses] = await HumanPoseEstimate(PoseNet, webCam, timestamp);
       console.log("poses", poses);
+      const pose_idx = MatchingPoseFromFaceout(raw_faceouts[0], raw_poses)
+      const pose = poses[pose_idx]
+      console.log("closest pose", pose, pose_idx);
       // if (poses.length === 0)
       //   return;
-      const prediction = await TFModelPredict(TFModel, faceouts[0], poses[0])
+      const prediction = await TFModelPredict(TFModel, faceouts[0], pose)
       console.log("Predicted", prediction)
 
       await fetch("/api/sendData",

@@ -8,6 +8,27 @@ function TimeStamp() {
     return Math.round(new Date().getTime() / 1000);
 }
 
+function MinDistance(point1, point2){
+    return Math.pow(point1.y - point2.y,2) + Math.pow(point1.x - point2.x,2);
+}
+
+function MatchingPoseFromFaceout(faceout, poses){
+    if (faceout == null)
+        return 0;
+    faceout = faceout.landmarks.positions
+    let min_dist = MinDistance(PolygonCentroid(faceout), PolygonCentroid(GetFaceKeyPoints(poses[0])));
+    let min_pose = 0
+
+    for(let i = 1; i < poses.length; ++i){
+        const dist =  MinDistance(PolygonCentroid(faceout), PolygonCentroid(GetFaceKeyPoints(poses[i])))
+        if(dist < min_dist){
+            min_dist = dist;
+            min_pose = i;
+        }
+    }
+    return min_pose;
+}
+
 function PolygonCentroid(pts) {
     let first = pts[0], last = pts[pts.length - 1];
     if (first.x != last.x || first.y != last.y) pts.push(first);
