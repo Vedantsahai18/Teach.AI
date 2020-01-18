@@ -107,31 +107,31 @@ app.get('/api/getPerson', async (req , res)=>{
 app.post('/api/savePerson', async (req , res)=>{
     try{
         // console.log(req.body.data[0])
-        ARRAY_DATA = req.body.data[0]
-        
-        if(ARRAY_DATA!==null)
-        {
-            var client = new Client({
-                connectionString: conString,
-            })
-            try{
-                await client.connect()
-                console.log("Connected successfully.")
+        ARRAY_DATA = req.body
+        console.log(ARRAY_DATA)
+    //     if(ARRAY_DATA!==null)
+    //     {
+    //         var client = new Client({
+    //             connectionString: conString,
+    //         })
+    //         try{
+    //             await client.connect()
+    //             console.log("Connected successfully.")
             
-                var str = 'INSERT INTO persondata (personid,base64image) VALUES ($1,$2)'
-                var values = [ ARRAY_DATA.personid,ARRAY_DATA.base64image ]
-                var rows = await client.query(str,values)
-                console.log(rows.rowCount+" row inserted into the table persondata...........")
-            }
-            catch(ex)
-            {
-                console.log(`Something wrong happened ${ex}`)
-            }
-        }
-        else
-        {
-            console.log("No Face was Detected")
-        }
+    //             var str = 'INSERT INTO persondata (personid,base64image) VALUES ($1,$2)'
+    //             var values = [ ARRAY_DATA.personid,ARRAY_DATA.base64image ]
+    //             var rows = await client.query(str,values)
+    //             console.log(rows.rowCount+" row inserted into the table persondata...........")
+    //         }
+    //         catch(ex)
+    //         {
+    //             console.log(`Something wrong happened ${ex}`)
+    //         }
+    //     }
+    //     else
+    //     {
+    //         console.log("No Face was Detected")
+    //     }
     }
     catch(ex)
     {
