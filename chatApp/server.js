@@ -65,10 +65,10 @@ app.post('/api/sendData', async (req , res)=>{
     }
 })
 
-app.get('/api/getPerson', async (req , res)=>{
+app.get('/api/getPerson/:id', async (req , res)=>{
     try{
         // console.log(req.body.data[0])
-        ARRAY_DATA = 1
+        ARRAY_DATA = req.params.id
         
         if(ARRAY_DATA!==null)
         {
@@ -80,7 +80,7 @@ app.get('/api/getPerson', async (req , res)=>{
                 console.log("Connected successfully.")
             
                 var str = 'SELECT base64image from persondata where personid=$1'
-                var values = [ 1 ]
+                var values = [ ARRAY_DATA ]
                 var rows1 = await client.query(str,values)
                 if(rows1.rows[0].base64image){
                     res.send(rows1.rows[0].base64image)
