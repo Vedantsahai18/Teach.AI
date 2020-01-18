@@ -81,6 +81,21 @@
     photo.hidden = true;
 
     console.log(base64);
+    image_data = {
+      personid : 4,
+      image : base64
+    }
+
+    $.ajax({
+      url: "/api/sendImage",
+      method: "POST",        
+      data: image_data,
+      contentType: "application/json",
+      success: console.log("Data has been sent"),
+      error: function(errMsg) {
+          alert(JSON.stringify(errMsg));
+      }
+  });
   }
 
   // Set up our event listener to run the startup process
