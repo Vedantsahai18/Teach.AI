@@ -26,7 +26,7 @@ async function Setup() {
   console.log("Human Pose Estimation Setup Completed")
   await FaceDetectionSetup()
   console.log("Face Detection Setup completed")
-  const TFModel = await TFModelSetup(MODEL_HTTP_URL,MODEL_INDEXEDDB_URL)
+  const TFModel = await TFModelSetup(MODEL_HTTP_URL, MODEL_INDEXEDDB_URL)
   console.log("TF Model Setup Setup completed")
 
   setInterval(async () => {
@@ -45,7 +45,18 @@ async function Setup() {
       // if (poses.length === 0)
       //   return;
       const prediction = await TFModelPredict(TFModel, faceouts[0], poses[0])
-      console.log(prediction)
+      console.log("Predicted", prediction)
+
+      await fetch("/api/sendData",
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          body: JSON.stringify({ ...poses[0], ...faceouts[0], ...prediction })
+        });
+
     }
   }, 3000)
 }

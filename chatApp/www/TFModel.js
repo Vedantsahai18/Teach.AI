@@ -18,11 +18,14 @@ async function TFModelSetup(MODEL_HTTP_URL, MODEL_INDEXEDDB_URL) {
 }
 
 async function TFModelPredict(model, emo, pose) {
-    const items = [emo.happy, emo.angry, emo.disgusted, pose.raisHand, pose.sleeping, pose.headPose]
+    if(emo == null || pose == null)
+        return [0,0,0]
+    const items = [emo.happy, emo.angry, emo.disgusted, pose.raisHand, pose.sleeping, emo.headPose]
     const input = tf.tensor2d([items])
     let result = await model.predict(input)
     result = await result.data()
     result = Array.from(result)
+    result = {output1: result[0],output2: result[1], output3: result[2]}
     return result
 }
 

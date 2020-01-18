@@ -29,8 +29,7 @@ app.get('/api', (req , res)=>{
 
 app.post('/api/sendData', async (req , res)=>{
     try{
-        // console.log(req.body.data[0])
-        ARRAY_DATA = req.body.data[0]
+        ARRAY_DATA = req.body
         
         if(ARRAY_DATA!==null)
         {
@@ -44,8 +43,8 @@ app.post('/api/sendData', async (req , res)=>{
                 var str = 'INSERT INTO maindata (happy,disgusted,angry,timestamp,personid,handraised,sleep,headgaze,output1,output2,output3) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)'
                 var values = [ ARRAY_DATA.happy,ARRAY_DATA.disgusted,
                                 ARRAY_DATA.angry,ARRAY_DATA.timestamp,
-                                ARRAY_DATA.personId,ARRAY_DATA.handraised,
-                                ARRAY_DATA.sleep,ARRAY_DATA.headgaze,
+                                ARRAY_DATA.personId,ARRAY_DATA.raisHand,
+                                ARRAY_DATA.sleeping,ARRAY_DATA.headPose,
                                 ARRAY_DATA.output1,ARRAY_DATA.output2,ARRAY_DATA.output3 ]
                 var rows = await client.query(str,values)
                 console.log(rows.rowCount+" row inserted into the table maindata...........")
