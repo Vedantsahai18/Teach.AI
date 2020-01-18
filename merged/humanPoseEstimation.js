@@ -5,38 +5,38 @@ let isSleeping = [];
 let lastRaiseHand = [];
 let isRaiseHand = []
 
-async function HumanPoseEstimate(net, input, timestamp, THRESHOLD=0.3) {
+async function HumanPoseEstimate(net, input, timestamp, POSE_THRESHOLD=0.01, THRESHOLD = 0.3) {
   const raw_poses = await net.estimateMultiplePoses(input, {
     flipHorizontal: false,
     maxDetections: 5,
-    scoreThreshold: THRESHOLD,
+    scoreThreshold: POSE_THRESHOLD,
     nmsRadius: 20
   });
-  return gotPoses(raw_poses, THRESHOLD, timestamp);
+  return gotPoses(raw_poses, POSE_THRESHOLD, THRESHOLD, timestamp);
 }
 
 async function HumanPoseEstimationSetup(video) {
-    HeadGazeSetup(video);
-    const net = await posenet.load({
-      architecture: 'MobileNetV1',
-      outputStride: 16,
-      inputResolution: { width: video.width, height: video.height },
-      multiplier: 0.75
-    });
-    return net;
+  HeadGazeSetup(video);
+  const net = await posenet.load({
+    architecture: 'MobileNetV1',
+    outputStride: 16,
+    inputResolution: { width: video.width, height: video.height },
+    multiplier: 0.75
+  });
+  return net;
 }
 
-function gotPoses(poses, THRESHOLD, timestamp) {
+function gotPoses(poses, POSE_THRESHOLD, THRESHOLD, timestamp) {
 
   let OUTPUT = []
   if (poses == null)
     return OUTPUT;
 
   for (let i = 0; i < poses.length; i++) {
-    if (poses[i]["score"] >= THRESHOLD) {
+    if (poses[i]["score"] >= POSE_THRESHOLD) {
       keypoints = poses[i]["keypoints"]
       const item = {
-        headPose:  HeadGazeDetect(poses[i], THRESHOLD),
+        headPose: HeadGazeDetect(poses[i], THRESHOLD),
         sleeping: checkSleeping(keypoints, timestamp, i),
         raisHand: checkRaiseHand(keypoints, timestamp, i),
         eyeCoordX: keypoints[1].position.x,

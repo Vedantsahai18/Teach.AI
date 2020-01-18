@@ -15,6 +15,7 @@
   let startbutton = null;
 
   async function startup() {
+    await FaceDetectionSetup()
     video = document.getElementById('video');
     canvas = document.getElementById('canvas');
     photo = document.getElementById('photo');
@@ -41,6 +42,7 @@
 
     let data = canvas.toDataURL('image/png');
     photo.setAttribute('src', data);
+    photo.hidden = true;
   }
 
   // Capture a photo by fetching the current contents of the video
@@ -49,16 +51,36 @@
   // drawing that to the screen, we can change its size and/or apply
   // other changes before drawing it.
 
-  function takepicture() {
+  async function takepicture() {
+    photo.hidden = false;
     let context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, width, height);
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     let base64 = canvas.toDataURL('image/png');
     photo.setAttribute('src', base64);
+    base64 = await faceapi.fetchImage(base64);
+
+    let userFaceDescription = await DetectAllFaceDescriptionWithLandmarksAndDescription(base64)
+
+    userFaceDescription = userFaceDescription.reduce(function (a, b) {
+      return Math.max(a.detection.score, b.detection.score);
+    });
+    userFaceDescription = userFaceDescription.detection
+    userFaceDescription = userFaceDescription.box
+    let ctx = canvas.getContext('2d');
+    // ctx.beginPath();
+    // ctx.rect(userFaceDescription.topLeft.x, userFaceDescription.topLeft.y, userFaceDescription.width, userFaceDescription.height);
+    // ctx.stroke();
+    canvas.width = userFaceDescription.width;
+    canvas.height = userFaceDescription.height;
+    ctx.fillStyle = "#AAA";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(photo, userFaceDescription.topLeft.x, userFaceDescription.topLeft.y, userFaceDescription.width, userFaceDescription.height, 0, 0, userFaceDescription.width, userFaceDescription.height);
+    base64 = canvas.toDataURL('image/png');
+
+    photo.hidden = true;
 
     console.log(base64);
-
-    // Write Code to Publish to Backend
   }
 
   // Set up our event listener to run the startup process
