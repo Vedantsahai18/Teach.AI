@@ -164,38 +164,41 @@ var video_container = document.getElementById('video-player');
 console.log("befor update");
 video.addEventListener('timeupdate', function () {
 
-  var show = video.currentTime >= 5 && video.currentTime < 6;
+  var show = video.currentTime >= 25 && video.currentTime < 26;
   console.log(show);
+
 
   if (show) {
     console.log("video paused");
     video_container.style.display = 'none';
     video.pause();
-    video_container.style.display = 'none';
+    video.addEventListener('pause', function () {
+
+      quiz.style.display = 'block';
+      setTimeout(function () {
+    
+        console.log("display quiz");
+        showSlide(currentSlide);
+        previousButton.addEventListener("click", showPreviousSlide);
+        nextButton.addEventListener("click", showNextSlide);
+        submitButton.addEventListener('click', showResults);
+        
+        setTimeout(function () {
+          quiz.style.display = 'none';
+          video_container.style.display = 'block';
+          
+        }, 15000);
+    
+      }, 100);
+    
+    }, false);
+    
   }
 
 }, false);
 
-video.addEventListener('pause', function () {
 
-  quiz.style.display = 'block';
-  setTimeout(function () {
 
-    console.log("display quiz");
-    showSlide(currentSlide);
-    previousButton.addEventListener("click", showPreviousSlide);
-    nextButton.addEventListener("click", showNextSlide);
-    submitButton.addEventListener('click', showResults);
-    isPromoted = true;
-    setTimeout(function () {
-      quiz.style.display = 'none';
-      video_container.style.display = 'block';
-    }, 15000);
-
-  }, 100);
-
-  video.play()
-}, false);
 
 
 
