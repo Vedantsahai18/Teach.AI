@@ -26,7 +26,8 @@ async function DetectAllFaces(input, timestamp) {
         ...detections[i].expressions,
         timestamp: timestamp,
         numPerson: numPersons,
-        personId: i
+        personId: i,
+        headPose: HeadGazeDetect(detections[i])
       }
       OUTPUT.push(item)
     }

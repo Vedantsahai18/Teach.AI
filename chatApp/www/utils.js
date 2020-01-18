@@ -15,7 +15,7 @@ function PolygonCentroid(pts) {
         x = 0, y = 0,
         nPts = pts.length,
         p1, p2, f;
-    for (var i = 0, j = nPts - 1; i < nPts; j = i++) {
+    for (let i = 0, j = nPts - 1; i < nPts; j = i++) {
         p1 = pts[i]; p2 = pts[j];
         f = (p1.y - first.y) * (p2.x - first.x) - (p2.y - first.y) * (p1.x - first.x);
         twicearea += f;

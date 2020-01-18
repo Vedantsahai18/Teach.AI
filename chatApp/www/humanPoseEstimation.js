@@ -5,7 +5,7 @@ let isSleeping = [];
 let lastRaiseHand = [];
 let isRaiseHand = []
 
-async function HumanPoseEstimate(net, input, timestamp, POSE_THRESHOLD=0.01, THRESHOLD = 0.3) {
+async function HumanPoseEstimate(net, input, timestamp, POSE_THRESHOLD=0.3, THRESHOLD = 0.3) {
   const raw_poses = await net.estimateMultiplePoses(input, {
     flipHorizontal: false,
     maxDetections: 5,
@@ -36,7 +36,6 @@ function gotPoses(poses, POSE_THRESHOLD, THRESHOLD, timestamp) {
     if (poses[i]["score"] >= POSE_THRESHOLD) {
       keypoints = poses[i]["keypoints"]
       const item = {
-        headPose: HeadGazeDetect(poses[i], THRESHOLD),
         sleeping: checkSleeping(keypoints, timestamp, i),
         raisHand: checkRaiseHand(keypoints, timestamp, i),
         eyeCoordX: keypoints[1].position.x,

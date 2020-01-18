@@ -70,16 +70,13 @@ function HeadGazeSetup(source) {
   };
 }
 
-function HeadGazeDetect(person,THRESHOLD) {
+function HeadGazeDetect(person) {
   // Check NS, LE, RE
-  for (let i = 0; i < 3; ++i) {
-    if (person.keypoints[i].score < THRESHOLD)
-      return 0;
-  }
-
-  const ns = person.keypoints[0].position;
-  const le = person.keypoints[1].position;
-  const re = person.keypoints[2].position;
+  person = person.landmarks
+  
+  const ns = PolygonCentroid(person.getNose());
+  const le = PolygonCentroid(person.getLeftEye());
+  const re = PolygonCentroid(person.getRightEye());
 
   // 2D image points. If you change the image, you need to change vector
   [
