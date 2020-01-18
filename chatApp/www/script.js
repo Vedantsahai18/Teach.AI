@@ -8,7 +8,7 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 // Change to Link from Database
 const FACE_URI = "/api/face-img";
 const MODEL_HTTP_URL = '/models/model.json'
-const MODEL_INDEXEDDB_URL = 'indexeddb://attention-model2';
+const MODEL_INDEXEDDB_URL = 'indexeddb://attention-model';
 
 async function Setup() {
   console.log("Setup Started")
@@ -35,15 +35,15 @@ async function Setup() {
       const timestamp = TimeStamp();
       const faceouts = await DetectAllFaces(webCam, timestamp);
       console.log("faceouts", faceouts);
-      if (faceouts.length === 0)
-        return;
+      // if (faceouts.length === 0)
+      //   return;
 
       // FaceRecognition(webCam, currentFaceMatcher)
 
       const poses = await HumanPoseEstimate(PoseNet, webCam, timestamp);
       console.log("poses", poses);
-      if (poses.length === 0)
-        return;
+      // if (poses.length === 0)
+      //   return;
       const prediction = await TFModelPredict(TFModel, faceouts[0], poses[0])
       console.log(prediction)
     }

@@ -80,7 +80,7 @@
 
     photo.hidden = true;
 
-    console.log(base64);
+    // console.log(base64);
     image_data = {
       personid: 4,
       image: base64
