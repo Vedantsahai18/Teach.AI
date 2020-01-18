@@ -1,9 +1,4 @@
-
-
-const MODEL_HTTP_URL = '/model/model.json'
-const MODEL_INDEXEDDB_URL = 'indexeddb://attention-model';
-
-async function TFModelSetup() {
+async function TFModelSetup(MODEL_HTTP_URL, MODEL_INDEXEDDB_URL) {
     try {
         // Try loading locally saved model
         const model = await tf.loadLayersModel(MODEL_INDEXEDDB_URL)
@@ -23,10 +18,11 @@ async function TFModelSetup() {
 }
 
 async function TFModelPredict(model, emo, pose) {
-    const items = [emo.happy, emo.angry, emo.disgusted, pose.hand, pose.sleep, pose.gaze]
+    const items = [emo.happy, emo.angry, emo.disgusted, pose.raisHand, pose.sleeping, pose.headPose]
     const input = tf.tensor2d([items])
-    console.log(input)
-    const result = await model.predict(input).print()
+    let result = await model.predict(input)
+    result = await result.data()
+    result = Array.from(result)
     return result
 }
 
