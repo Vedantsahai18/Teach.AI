@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script type="text/javascript">
+  
+    jQuery.getJSON("https://canvasjs.com/services/data/datapoints.php?xstart=5&ystart=10&length=1000&type=json&callback=?", function(data){
+      
+      var dataPoints = [];
+      var x=1;
+      $.each(data, function(key, value){
+    dataPoints.push({x: value[0], y: value[1]})	;    
+  	//console.log("x: " + value[0] + "; y:" + value[1]);
+  });
+  
+      
+      var chart = new CanvasJS.Chart("chartContainer",
+    {
+      data: [
+      {
+        type: "line"
+      }					
+      ]
+    });
+
+      chart.options.data[0].dataPoints = dataPoints;
+
+      
+
+      chart.render();
+    });  
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <br/><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
+<div id="chartContainer" style="height: 360px; width: 100%;"></div>
+</body>
+</html>
