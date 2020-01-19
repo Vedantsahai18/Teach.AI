@@ -73,7 +73,7 @@ function showResults() {
       video_container.style.display = 'block';
       video.play()
 
-    }, 5000);
+    }, 3000);
   });
 
   // show number of correct answers out of total
@@ -148,7 +148,7 @@ const myQuestions = [
 console.log(myQuestions)
 // Kick things off
 buildQuiz();
-
+manually_paused = true;
 
 
 
@@ -161,41 +161,43 @@ var quiz = document.getElementById('quiz-layer');
 var video = document.getElementById('myVideo');
 var video_container = document.getElementById('video-player');
 
-console.log("befor update");
-video.addEventListener('timeupdate', function () {
-
-  var show = video.currentTime >= 25 && video.currentTime < 26;
-  console.log(show);
-
-
-  if (show) {
-    console.log("video paused");
-    video_container.style.display = 'none';
+pausing_function = function(){
+  if(video.currentTime >= 60){
     video.pause();
-    video.addEventListener('pause', function () {
-
-      quiz.style.display = 'block';
-      setTimeout(function () {
-    
-        console.log("display quiz");
-        showSlide(currentSlide);
-        previousButton.addEventListener("click", showPreviousSlide);
-        nextButton.addEventListener("click", showNextSlide);
-        submitButton.addEventListener('click', showResults);
-        
-        setTimeout(function () {
-          quiz.style.display = 'none';
-          video_container.style.display = 'block';
-          
-        }, 15000);
-    
-      }, 100);
-    
-    }, false);
-    
+    console.log("video paused");
+    manually_paused = false;
+    video_container.style.display = 'none';
+    video.removeEventListener('timeupdate', pausing_function);
+    display_quiz();
   }
+}
+video.addEventListener('timeupdate', pausing_function);
 
-}, false);
+function display_quiz(){
+    video.addEventListener('pause', function () {
+      if(!manually_paused){
+
+        quiz.style.display = 'block';
+        setTimeout(function () {
+      
+          console.log("display quiz");
+          showSlide(currentSlide);
+          previousButton.addEventListener("click", showPreviousSlide);
+          nextButton.addEventListener("click", showNextSlide);
+          submitButton.addEventListener('click', showResults);
+          
+          setTimeout(function () {
+            quiz.style.display = 'none';
+            video_container.style.display = 'block';
+            manually_paused = true;
+            
+          }, 10000);
+      
+        }, 100);
+      }
+    });
+  
+}
 
 
 
