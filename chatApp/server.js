@@ -27,6 +27,8 @@ app.get('/api', (req , res)=>{
     res.send("<marquee><h1>This api is made by Princeton</h1><marquee>")
 })
 
+/* ********************************SEND DATA********************************** */
+
 app.post('/api/sendData', async (req , res)=>{
     try{
         ARRAY_DATA = req.body
@@ -64,6 +66,9 @@ app.post('/api/sendData', async (req , res)=>{
         console.log(`Something wrong happened ${ex}`)
     }
 })
+
+
+/* ********************************GET PERSON********************************** */
 
 app.get('/api/getPerson/:id', async (req , res)=>{
     try{
@@ -103,6 +108,8 @@ app.get('/api/getPerson/:id', async (req , res)=>{
     }
 })
 
+/* ********************************SAVE PERSON********************************** */
+
 app.post('/api/savePerson', async (req , res)=>{
     try{
         // console.log(req.body.data[0])
@@ -137,6 +144,31 @@ app.post('/api/savePerson', async (req , res)=>{
         console.log(`Something wrong happened ${ex}`)
     }
 })
+
+/* ********************************GET TIMESTAMPS FOR QUIZ********************************** */
+
+app.get('/api/sendTime', async (req , res)=>{
+    try{
+        var minutes = req.body.minutes
+        var seconds = req.body.seconds
+
+        var totalSeconds = minutes*60 + seconds;
+
+        if(totalSeconds<60){
+            returningTime = 25;
+        }
+        else if(totalSeconds>60){
+            returningTime = 60;
+        }
+        res.send(returningTime)
+
+    }
+    catch(ex)
+    {
+        console.log(`Something went wrong ${ex}`)
+    }
+});
+
 
 //server.listen(3000);//for local test
 server.listen(process.env.PORT || 3000, ()=> console.log("Node Server Running on port 3000"));//publish to heroku
